@@ -1,0 +1,48 @@
+{
+  "name": "l5",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "^2.1.1",
+    "@react-native-community/netinfo": "^11.4.1",
+    "@react-native-masked-view/masked-view": "^0.2.8",
+    "@react-navigation/native": "^7.0.14",
+    "@react-navigation/stack": "^7.1.1",
+    "axios": "^1.8.4",
+    "cloudinary": "^2.6.0",
+    "expo": "~52.0.24",
+    "expo-camera": "^16.0.18",
+    "expo-file-system": "^18.0.12",
+    "expo-image-manipulator": "^13.0.6",
+    "expo-image-picker": "^16.0.6",
+    "expo-location": "^18.0.9",
+    "expo-media-library": "^17.0.6",
+    "expo-sqlite": "~15.1.2",
+    "expo-status-bar": "~2.0.0",
+    "react": "18.3.1",
+    "react-native": "0.76.5",
+    "react-native-dropdown-picker": "^5.4.6",
+    "react-native-gesture-handler": "^2.25.0",
+    "react-native-linear-gradient": "^2.8.3",
+    "react-native-maps": "^1.20.1",
+    "react-native-paper": "^5.13.1",
+    "react-native-picker-select": "^9.3.1",
+    "react-native-safe-area-context": "^5.2.0",
+    "react-native-screens": "^4.6.0",
+    "react-native-shimmer-placeholder": "^2.0.9",
+    "react-native-skeleton-placeholder": "^5.2.4",
+    "react-native-ui-lib": "^7.39.1",
+    "react-native-vector-icons": "^10.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "@react-native-community/cli": "^18.0.0"
+  },
+  "private": true
+}
