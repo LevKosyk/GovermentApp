@@ -1,15 +1,14 @@
-import React, { useState, useContext, useEffect, useMemo } from 'react';
-import { TouchableOpacity, FlatList, StyleSheet, Text, View, Image, Alert, Pressable } from 'react-native';
+import { useState, useContext, useEffect, useMemo, useCallback } from 'react';
+import { TouchableOpacity, FlatList, StyleSheet, Text, View, Image, Pressable } from 'react-native';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AppContext } from '../Provider/AppContextProvider';
-import { FetchDataByDay } from '../../service/AppService';
 import MapView, { Marker } from 'react-native-maps';
-import Navbar from '../AditionalyScreens/Navbar';
+
+import { AppContext } from '../Provider/AppContextProvider';
+import { FetchDataByDay, FetchDataByDayForCrime } from '../../service/AppService';
 import { Modal } from 'react-native-paper';
-import { CustomDarkTheme } from '../Theme/Themes';
-import Loader from '../AditionalComponents/Loader'; // Import Loader component
-import DropDownList from '../AditionalComponents/DropDownList'; // Import DropDownList component
+import Loader from '../AditionalComponents/Loader';
+import DropDownList from '../AditionalComponents/DropDownList';
 import { ViolationTypes } from '../../enums/enums';
 
 export default function DayDetailsScreen({ route, navigation }) {
@@ -19,9 +18,7 @@ export default function DayDetailsScreen({ route, navigation }) {
     const [selectedImage, setSelectedImage] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
     const [description, setDescription] = useState(null);
-    const { theme } = useContext(AppContext);
-    const { data } = route.params;
-
+    const [crimes, setCrimes] = useState([])
     const [sortOpen, setSortOpen] = useState(false);
     const [sortValue, setSortValue] = useState(null);
     const [sortItems, setSortItems] = useState([
@@ -29,16 +26,25 @@ export default function DayDetailsScreen({ route, navigation }) {
         { label: 'By date ↓', value: 'dateDesc' },
     ]);
 
+    const { theme } = useContext(AppContext);
+    const { data } = route.params;
+
     useEffect(() => {
         const loadTasks = async () => {
             setLoading(true);
             const login = await AsyncStorage.getItem('Authorized');
             if (login) {
                 const tasks = await FetchDataByDay(data, login);
+                const crimeData = await FetchDataByDayForCrime(data, login)
+                const updatedCrimeData = crimeData.map(task => ({
+                    ...task,
+                    situation: ViolationTypes[task.situation] || task.situation,
+                }));
                 const updatedTasks = tasks.map(task => ({
                     ...task,
                     situation: ViolationTypes[task.situation] || task.situation,
                 }));
+                setCrimes(updatedCrimeData)
                 setTodos(updatedTasks);
             }
             setLoading(false);
@@ -58,6 +64,7 @@ export default function DayDetailsScreen({ route, navigation }) {
     }, [todos]);
 
     const handleOpenImage = (uri) => {
+        console.log(uri);
         setSelectedImage(uri);
         setIsModalVisible(true);
     };
@@ -67,34 +74,76 @@ export default function DayDetailsScreen({ route, navigation }) {
         setSelectedImage(null);
     };
 
-    const handleOpenDescription = (description) => {
+    const handleOpenDescription = useCallback((description) => {
         setSortOpen(false);
         setDescription(description);
         setModalVisible(true);
-    };
+    }, []);
 
-    const handleSort = (value) => {
+    const handleSort = useCallback((value) => {
         if (!value) return;
 
         const sorted = [...todos].sort((a, b) => {
             const dateA = new Date(a.date);
             const dateB = new Date(b.date);
-
-            if (value === 'dateAsc') {
-                return dateA - dateB;
-            } else if (value === 'dateDesc') {
-                return dateB - dateA;
-            }
-
-            return 0;
+            return value === 'dateAsc' ? dateA - dateB : dateB - dateA;
         });
 
         setTodos(sorted);
-    };
+    }, [todos]);
+
+    const loadData = (data) => {
+        return (
+            <View style={styles.listContainer}>
+                <FlatList
+                    data={data}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={({ item }) => (
+                        <View style={[styles.listItem, { backgroundColor: theme.colors.surface }]}>
+                            <TouchableOpacity onPress={() => handleOpenImage(item.url)} style={styles.photoItem}>
+                                <Image
+                                    source={{ uri: item.url }}
+                                    style={styles.image}
+                                />
+                            </TouchableOpacity>
+                            <View style={[styles.listItemContent, { backgroundColor: theme.colors.surface }]}>
+                                <Text style={[styles.timeText, { color: theme.colors.secondaryText }]}>
+                                    {item.date.split('T')[1].split(':').slice(0, 2).join(':')}
+                                </Text>
+                                <Text style={[styles.situation, { color: theme.colors.secondaryText }]}>
+                                    {item.situation}
+                                </Text>
+                                <TouchableOpacity onPress={() => handleOpenDescription(item.description)}>
+                                    <Text style={[styles.description, { color: 'blue' }]}>
+                                        Read description
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    )}
+                />
+            </View>
+        )
+    }
+
+    const renderSection = (data, title, iconName, iconColor) => (
+        <>
+            <View style={[styles.sectionHeader, { backgroundColor: theme.colors.surface }]}>
+                <Ionicons name={iconName} size={22} color={iconColor} style={{ marginRight: 8 }} />
+                <Text style={[styles.sectionHeaderText, { color: theme.colors.secondaryText }]}>{title}</Text>
+            </View>
+            {data && data.length > 0 ? (
+                loadData(data)
+            ) : (
+                <Text style={[styles.emptyMessage, { color: theme.colors.secondaryText }]}>Nothing for this section</Text>
+            )}
+        </>
+    );
+
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-            <Navbar navigation={navigation} />
+
             <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
                 <TouchableOpacity
                     style={[styles.backButton, { backgroundColor: '#007bff', marginTop: 20 }]}
@@ -102,9 +151,9 @@ export default function DayDetailsScreen({ route, navigation }) {
                     <Ionicons name="chevron-back" size={24} color={theme.colors.text} />
                 </TouchableOpacity>
 
-                <Text style={[styles.header, { color: theme.colors.secondaryText }]}>Tasks for {data}</Text>
+                <Text style={[styles.header, { color: theme.colors.secondaryText }]}>Data for {data}</Text>
 
-                <Loader state={loading} theme={theme} /> 
+                <Loader state={loading} theme={theme} />
 
                 {!loading && (
                     todos.length === 0 ? (
@@ -116,12 +165,28 @@ export default function DayDetailsScreen({ route, navigation }) {
                                     style={styles.map}
                                     initialRegion={mapRegion}
                                 >
+                                    {crimes.map(item => (
+                                        <Marker
+                                            key={item.id}
+                                            coordinate={{
+                                                latitude: parseFloat(item.latitude),
+                                                longitude: parseFloat(item.longitude),
+                                            }}
+                                        >
+                                            <View style={styles.markerContainer}>
+                                                <Image
+                                                    source={{ uri: item.url }}
+                                                    style={styles.markerImage}
+                                                />
+                                            </View>
+                                        </Marker>
+                                    ))}
                                     {todos.map(item => (
                                         <Marker
                                             key={item.id}
                                             coordinate={{
                                                 latitude: parseFloat(item.latitude),
-                                                longitude: parseFloat(item.longetude),
+                                                longitude: parseFloat(item.longitude),
                                             }}
                                         >
                                             <View style={styles.markerContainer}>
@@ -135,7 +200,7 @@ export default function DayDetailsScreen({ route, navigation }) {
                                 </MapView>
                             </View>
 
-                            <View style={{ marginBottom: 15, alignItems: 'flex-end', flexDirection: 'row', zIndex: modalVisible ? 0 : 1000 }}>
+                            <View style={{ marginBottom: 15, alignItems: 'flex-end', flexDirection: 'row', zIndex: modalVisible || isModalVisible ? 0 : 1000 }}>
                                 <Text style={[styles.textStyle, { color: theme.colors.secondaryText, fontWeight: '800', fontSize: 26 }]}>Crimes:</Text>
                                 <DropDownList
                                     open={sortOpen}
@@ -148,47 +213,27 @@ export default function DayDetailsScreen({ route, navigation }) {
                                     placeholder="Sort by"
                                     theme={theme}
                                     width="40%"
-                                    margin ="45%"
+                                    margin="45%"
                                 />
                             </View>
 
-                            <View style={styles.listContainer}>
-                                <FlatList
-                                    data={todos}
-                                    keyExtractor={(item) => item.id.toString()}
-                                    renderItem={({ item }) => (
-                                        <View style={styles.listItem}>
-                                            <TouchableOpacity onPress={() => handleOpenImage(item.url)} style={styles.photoItem}>
-                                                <Image
-                                                    source={{ uri: item.url }}
-                                                    style={styles.image}
-                                                />
-                                            </TouchableOpacity>
-                                            <View style={styles.listItemContent}>
-                                                <Text style={[styles.timeText, { color: theme.colors.secondaryText }]}>
-                                                    {item.date.split('T')[1].split(':').slice(0, 2).join(':')}
-                                                </Text>
-                                                <Text style={[styles.situation, { color: theme.colors.secondaryText }]}>
-                                                    {item.situation}
-                                                </Text>
-                                                <TouchableOpacity onPress={() => handleOpenDescription(item.description)}>
-                                                    <Text style={[styles.description, { color: 'blue' }]}>
-                                                        Read description
-                                                    </Text>
-                                                </TouchableOpacity>
-                                            </View>
-                                        </View>
-                                    )}
-                                />
-                            </View>
+                            {renderSection(crimes, "Crimes", "alert-circle", "#d9534f")}
+                            {renderSection(todos, "I fixed", "checkmark-circle", "#28a745")}
+
+
                         </View>
                     )
                 )}
 
-                <Modal visible={isModalVisible} transparent={true} animationType="fade" onRequestClose={handleCloseModal}>
-                    <TouchableOpacity style={styles.fullscreenContainer} onPress={handleCloseModal}>
-                        <Image source={{ uri: selectedImage }} style={styles.fullscreenImage} resizeMode="contain" />
-                    </TouchableOpacity>
+                <Modal visible={isModalVisible} transparent animationType="fade" onRequestClose={handleCloseModal} >
+                    <View style={[styles.modalOverlay, {backgroundColor: theme.colors.background}]}>
+                        <View style={[styles.enhancedModalView, {backgroundColor: theme.colors.background}]}>
+                            <TouchableOpacity onPress={handleCloseModal} style={[styles.enhancedCloseButton, {backgroundColor: theme.colors.background}]} activeOpacity={0.7}> 
+                                <Ionicons name="close" size={28} color={theme.colors.secondaryText} />
+                            </TouchableOpacity>
+                            <Image source={{ uri: selectedImage }} style={styles.enhancedModalImage}/>
+                        </View>
+                    </View>
                 </Modal>
 
                 <Modal
@@ -202,7 +247,7 @@ export default function DayDetailsScreen({ route, navigation }) {
                             <Pressable
                                 style={[styles.button, styles.buttonClose]}
                                 onPress={() => setModalVisible(!modalVisible)}>
-                                <Text style={styles.textStyle}>Hide Modal</Text>
+                                <Text style={styles.textStyle}>Hide</Text>
                             </Pressable>
                         </View>
                     </View>
@@ -321,7 +366,7 @@ const styles = StyleSheet.create({
         elevation: 5,
         width: 300,
         maxHeight: 'auto',
-        zIndex: 1000, 
+        zIndex: 1000,
     },
     modalText: {
         marginBottom: 15,
@@ -347,5 +392,86 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    sectionHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#f2f2f2',
+        paddingVertical: 8,
+        paddingHorizontal: 12,
+        borderRadius: 8,
+        marginTop: 10,
+        marginBottom: 5,
+    },
+    sectionHeaderText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#333',
+    },
+    listItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 12,
+        paddingHorizontal: 10,
+        borderRadius: 10,
+        backgroundColor: '#fff',
+        marginBottom: 10,
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+    },
+    markerContainer: {
+        backgroundColor: 'white',
+        padding: 2,
+        borderRadius: 8,
+        alignItems: 'center',
+        borderWidth: 2,
+        borderColor: '#ccc',
+        position: 'relative',
+    },
+    markerImage: {
+        width: 50,
+        height: 50,
+        borderRadius: 6,
+    },
+    enhancedModalView: {
+        backgroundColor: '#fff',
+        borderRadius: 18,
+        padding: 0,
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 320,
+        height: 420,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 12,
+        elevation: 10,
+        position: 'relative',
+    },
+    enhancedModalImage: {
+        width: 280,
+        height: 350,
+        borderRadius: 14,
+        marginTop: 30,
+        backgroundColor: '#eee',
+        borderWidth: 1,
+        borderColor: '#ddd',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15,
+        shadowRadius: 8,
+        elevation: 6,
+    },
+    enhancedCloseButton: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        zIndex: 10,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        borderRadius: 20,
+        padding: 4,
     },
 });

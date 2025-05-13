@@ -1,6 +1,8 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React, { useContext, useState } from 'react';
+import { useContext } from 'react';
+
 import { AppContext } from '../Provider/AppContextProvider';
+
 export default function Header({ month, year, clickUp, clickDown, now }) {
     const monthNames = [
         'January', 'February', 'March', 'April', 'May', 'June',

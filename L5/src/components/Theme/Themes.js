@@ -1,5 +1,4 @@
-import { PaperProvider, DefaultTheme } from "react-native-paper";
-
+import { DefaultTheme } from "react-native-paper";
 
 export const CustomLightTheme = {
     ...DefaultTheme,

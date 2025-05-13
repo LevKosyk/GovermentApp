@@ -1,8 +1,7 @@
-import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-const DropDownList = ({
+export default DropDownList = ({
     open,
     value,
     items,
@@ -56,4 +55,3 @@ const styles = StyleSheet.create({
     },
 });
 
-export default DropDownList;

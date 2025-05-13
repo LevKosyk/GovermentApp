@@ -1,9 +1,10 @@
 import React, { useState, createContext } from 'react';
+
 import { CustomLightTheme, CustomDarkTheme } from '../Theme/Themes';
 
 export const AppContext = createContext(null);
 
-const AppProvider = ({ children }) => {
+export default AppProvider = ({ children }) => {
     const [theme, setTheme] = useState(CustomLightTheme); 
 
     const changeTheme = (newTheme) => {
@@ -16,5 +17,3 @@ const AppProvider = ({ children }) => {
         </AppContext.Provider>
     );
 };
-
-export default AppProvider;

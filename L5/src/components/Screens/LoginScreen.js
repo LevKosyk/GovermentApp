@@ -1,12 +1,12 @@
 import React, { useState, useContext } from 'react';
 import { Alert, StyleSheet, Text, TextInput, View, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AppContext } from '../Provider/AppContextProvider';
-import { FetchLogin } from '../../service/AppService';
-import Navbar from '../AditionalyScreens/Navbar';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const LoginScreen = ({ navigation }) => {
+import { AppContext } from '../Provider/AppContextProvider';
+import { FetchLogin } from '../../service/AppService';
+
+export default LoginScreen = ({ navigation }) => {
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
     const [secureTextEntry, setSecureTextEntry] = useState(true);
@@ -22,8 +22,10 @@ const LoginScreen = ({ navigation }) => {
             await AsyncStorage.setItem('Authorized', login);
             await FetchLogin(login, password);
             Alert.alert('Success', 'All ok');
-            navigation.navigate('MainScreen');
-            navigation.reset()
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'HomeScreen' }],
+            });
         } else {
             Alert.alert('Error', 'Incorrect login or password');
         }
@@ -35,7 +37,6 @@ const LoginScreen = ({ navigation }) => {
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
             <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-                <Navbar navigation={navigation} />
                 <ScrollView contentContainerStyle={[styles.container, { backgroundColor: theme.colors.background }]}>
                     <Text style={[styles.title, { color: theme.colors.secondaryText }]}>Login</Text>
 
@@ -47,7 +48,6 @@ const LoginScreen = ({ navigation }) => {
                         placeholder="Enter login"
                         placeholderTextColor={theme.colors.text}
                     />
-
 
                     <Text style={[styles.label, { color: theme.colors.secondaryText }]}>Password</Text>
                     <TextInput
@@ -70,7 +70,7 @@ const LoginScreen = ({ navigation }) => {
                         <Text style={[styles.buttonText]}>Login</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => navigation.navigate('RegisterScreen')} style={[styles.button, styles.registerButton]}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Register')} style={[styles.button, styles.registerButton]}>
                         <Text style={[styles.buttonText]}>Register</Text>
                     </TouchableOpacity>
                 </ScrollView>
@@ -126,5 +126,3 @@ const styles = StyleSheet.create({
         color: 'white',
     },
 });
-
-export default LoginScreen;

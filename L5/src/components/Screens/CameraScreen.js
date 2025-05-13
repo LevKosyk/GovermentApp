@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { TouchableOpacity, View, Text, Image, StyleSheet, Alert, ActivityIndicator, ScrollView, KeyboardAvoidingView, SafeAreaView, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { TouchableOpacity, View, Text, Image, StyleSheet, Alert, ActivityIndicator, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, TextInput, Modal, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
 import { FetchSendPhoto } from '../../service/AppService';
 import { AppContext } from '../Provider/AppContextProvider';
-import { TextArea } from 'react-native-ui-lib';
 import { ViolationTypes } from '../../enums/enums';
-import Navbar from '../AditionalyScreens/Navbar';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import DropDownList from '../AditionalComponents/DropDownList'
-import { Modal } from 'react-native';
 import Loader from '../AditionalComponents/Loader'
 
-const CameraScreen = ({ navigation }) => {
+export default CameraScreen = ({ navigation }) => {
+  const { theme } = useContext(AppContext);
+
   const [photo, setPhoto] = useState(null);
   const [loading, setLoading] = useState(false);
   const [situation, setSituation] = useState(null);
@@ -21,7 +21,7 @@ const CameraScreen = ({ navigation }) => {
   const [items, setItems] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const { theme } = useContext(AppContext);
+
 
   useEffect(() => {
     const getPermissions = async () => {
@@ -73,82 +73,81 @@ const CameraScreen = ({ navigation }) => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-        <Navbar navigation={navigation} disabled={loading} />
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior="padding"
-        >
-          <View style={{ flex: 1, paddingHorizontal: 20, paddingTop: 20 }}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <View style={{ flex: 1, backgroundColor: theme.colors.background, paddingHorizontal: 20, paddingTop: 20 }}>
+          {loading ? (
+            <View style={styles.loaderContainer}>
+              <Loader state={loading} />
+            </View>
+          ) : (
+            <>
 
-            <Modal visible={modalVisible} transparent={true} animationType="fade" onRequestClose={handleCloseModal}>
-              <TouchableOpacity style={styles.fullscreenContainer} onPress={handleCloseModal}>
-                <Image source={{ uri: selectedImage }} style={styles.fullscreenImage} resizeMode="contain" />
-              </TouchableOpacity>
-            </Modal>
-            <Loader state={loading} />
-            {loading ? (
-              <View style={styles.loaderContainer}>
-                <ActivityIndicator size="large" color="#007bff" />
-                <Text style={[styles.loaderText, { color: theme.colors.text }]}>Processing...</Text>
-              </View>
-            ) : (
-              <>
-
-                {photo ? (
-                  <TouchableOpacity style={styles.preview} onPress={() => handleOpenImage(photo)}>
-                    <Image source={{ uri: photo }} style={styles.preview} />
-                  </TouchableOpacity>
-                ) : (
-                  <View style={[styles.imagePreviewContainer, { borderColor: theme.colors.secondaryText }]}>
-                    <Ionicons name="camera" size={100} color="#ccc" />
-                  </View>
-                )}
-
-                <TouchableOpacity onPress={handleOpenCamera} style={styles.cameraButton}>
-                  <Text style={[styles.buttonText, { color: theme.colors.text }]}>Take a Photo</Text>
+              {photo ? (
+                <TouchableOpacity style={styles.preview} onPress={() => handleOpenImage(photo)}>
+                  <Image source={{ uri: photo }} style={styles.preview} />
                 </TouchableOpacity>
-
-                <Text style={[styles.label, { color: theme.colors.secondaryText }]}>Situation</Text>
-                <DropDownList
-                  open={open}
-                  value={value}
-                  items={items}
-                  setOpen={setOpen}
-                  setValue={setValue}
-                  setItems={setItems}
-                  theme={theme}
-                  onChangeValue={setSituation}
-                  width="100%"
-                  margin="0%"
-                />
-
-                <Text style={[styles.label, { color: theme.colors.secondaryText }]}>Description</Text>
-                <View style={[styles.TextAreaContainer, { backgroundColor: theme.colors.surface, borderColor: theme.colors.secondaryText }]}>
-                  <TextArea
-                    style={[styles.textArea, { backgroundColor: theme.colors.surface, color: theme.colors.secondaryText }]}
-                    value={description}
-                    onChangeText={setDescription}
-                    placeholder="Describe the situation..."
-                    onSubmitEditing={() => Keyboard.dismiss()}
-                  />
+              ) : (
+                <View style={[styles.imagePreviewContainer, { borderColor: theme.colors.secondaryText }]}>
+                  <Ionicons name="camera" size={100} color="#ccc" />
                 </View>
+              )}
 
-                <TouchableOpacity
-                  style={[styles.sendButton, { backgroundColor: theme.colors.primary }]}
-                  onPress={sendPhoto}
-                  disabled={!photo || !situation || !description}
-                >
-                  <Text style={[styles.buttonText, { color: theme.colors.text }]}>Send Photo</Text>
-                </TouchableOpacity>
-              </>
-            )}
-          </View>
-        </KeyboardAvoidingView>
-      </View>
+              <TouchableOpacity onPress={handleOpenCamera} style={styles.cameraButton}>
+                <Text style={[styles.buttonText, { color: theme.colors.text }]}>Take a Photo</Text>
+              </TouchableOpacity>
+
+              <Text style={[styles.label, { color: theme.colors.secondaryText }]}>Situation</Text>
+              <DropDownList
+                open={open}
+                value={value}
+                items={items}
+                setOpen={setOpen}
+                setValue={setValue}
+                setItems={setItems}
+                theme={theme}
+                onChangeValue={setSituation}
+                width="100%"
+                margin="0%"
+              />
+
+              <Text style={[styles.label, { color: theme.colors.secondaryText }]}>Description</Text>
+              <View style={[styles.TextAreaContainer, { backgroundColor: theme.colors.surface, borderColor: theme.colors.secondaryText }]}>
+                <TextInput
+                  style={[
+                    styles.textArea,
+                    {
+                      backgroundColor: theme.colors.surface,
+                      color: theme.colors.secondaryText,
+                      textAlignVertical: 'top', 
+                    },
+                  ]}
+                  value={description}
+                  onChangeText={setDescription}
+                  placeholder="Describe the situation..."
+                  placeholderTextColor={theme.colors.secondaryText}
+                  multiline
+                  numberOfLines={6}
+                  onSubmitEditing={() => Keyboard.dismiss()}
+                />
+              </View>
+
+              <TouchableOpacity
+                style={[styles.sendButton, { backgroundColor: theme.colors.primary }]}
+                onPress={sendPhoto}
+                disabled={!photo || !situation || !description}
+              >
+                <Text style={[styles.buttonText, { color: theme.colors.text }]}>Send Photo</Text>
+              </TouchableOpacity>
+            </>
+          )}
+        </View>
+      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
-
 };
 
 const styles = StyleSheet.create({
@@ -230,9 +229,7 @@ const styles = StyleSheet.create({
   },
   textArea: {
     width: '100%',
-    height: 150,
-    borderColor: 'black',
-    borderWidth: 1,
+    height: 120,
     borderRadius: 10,
     padding: 10,
     marginTop: 10,
@@ -265,5 +262,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
-export default CameraScreen;

@@ -1,12 +1,12 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { AppContext } from '../Provider/AppContextProvider';
-import Navbar from '../AditionalyScreens/Navbar';
-import { CustomDarkTheme, CustomLightTheme } from '../Theme/Themes';
-import { StatusBar } from 'expo-status-bar';
 
-const SettingsScreen = ({ navigation }) => {
+import { AppContext } from '../Provider/AppContextProvider';
+import { CustomDarkTheme, CustomLightTheme } from '../Theme/Themes';
+
+export default SettingsScreen = ({ navigation }) => {
     const { theme, changeTheme } = useContext(AppContext);
+
     const toggleTheme = () => {;
         const newTheme = theme === CustomLightTheme ? CustomDarkTheme : CustomLightTheme;
         changeTheme(newTheme);
@@ -14,7 +14,6 @@ const SettingsScreen = ({ navigation }) => {
 
     return (
         <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-            <Navbar navigation={navigation} />
             <TouchableOpacity 
                 onPress={toggleTheme} 
                 style={[styles.btnChange, { backgroundColor: theme.colors.primary }]}
@@ -47,5 +46,3 @@ const styles = StyleSheet.create({
         flex: 1,
     },
 });
-
-export default SettingsScreen;

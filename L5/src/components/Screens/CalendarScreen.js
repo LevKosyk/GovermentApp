@@ -1,16 +1,15 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
 
 import { AppContext } from '../Provider/AppContextProvider';
-import Navbar from '../AditionalyScreens/Navbar';
 import DayComponentScreen from './DayComponentsScreen';
 import Header from '../AditionalyScreens/Header';
 import { FetchGetDaysWithMarkersByMonth } from '../../service/AppService';
 
 export default function CalendarScreen({ navigation }) {
-    const { theme, changeTheme } = useContext(AppContext);
+    const { theme } = useContext(AppContext);
+
     const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
     const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
     const [matrix, setMatrix] = useState([]);
@@ -35,8 +34,6 @@ export default function CalendarScreen({ navigation }) {
         setCurrentMonth(currentMonth === 11 ? 0 : currentMonth + 1);
         if (currentMonth === 11) setCurrentYear(currentYear + 1);
     };
-
-
 
     async function createTable() {
         setLoading(true);
@@ -88,7 +85,7 @@ export default function CalendarScreen({ navigation }) {
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-            <Navbar navigation={navigation} />
+           
             <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
                 {loading ? (
                     <View style={styles.loaderContainer}>

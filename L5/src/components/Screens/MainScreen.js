@@ -1,38 +1,60 @@
-import React, { useContext } from 'react';
-import { TouchableOpacity, View, Text, StyleSheet, Image, Alert } from 'react-native';
-import Navbar from '../AditionalyScreens/Navbar';
+import { useContext, useEffect, useState } from 'react';
+import { TouchableOpacity, View, Text, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import { AppContext } from '../Provider/AppContextProvider';
-const MainScreen = ({ navigation }) => {
-   const { theme} = useContext(AppContext);
+
+export default MainScreen = ({ navigation }) => {
+  const { theme } = useContext(AppContext);
+
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const init = async () => {
+      await createTable();
+      setLoading(true);
+      const status = await AsyncStorage.getItem('Authorized');
+      if (status) {
+        await CheakPhotosToSend()
+      }
+      setLoading(false);
+    };
+
+    init();
+  }, []);
+
   const handleOpen = async (where) => {
     if (await AsyncStorage.getItem('Authorized')) {
       navigation.navigate(where);
     }
-    else{
+    else {
       Alert.alert('You are not authorized!');
     }
   }
+
+  if (loading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <Loader />
+      </View>
+    );
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      <Navbar navigation={navigation} />
-      
-      <View style={[styles.container, {backgroundColor: theme.colors.background}]}>
-      <Text style={[styles.title, {color: theme.colors.secondaryText}]}>Good day!</Text>
-      <Text style={[styles.subtitle, {color: theme.colors.secondaryText}]}>Choose an action:</Text>
-
-      <TouchableOpacity style={styles.button} onPress={() => handleOpen('CameraScreen')}>
-        <Text style={[styles.buttonText, {color: theme.colors.text}]}>Take a photo</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.button} onPress={() =>handleOpen('CalendarScreen')}>
-        <Text style={[styles.buttonText,{color: theme.colors.text}]}>Open calendar</Text>
-      </TouchableOpacity>
-
-      <View style={styles.footer}>
-        <Text style={[styles.footerText, {color: theme.colors.secondaryText}]}>©Lev Kosyk</Text>
-      </View>
+      <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+        <Text style={[styles.title, { color: theme.colors.secondaryText }]}>Good day!</Text>
+        <Text style={[styles.subtitle, { color: theme.colors.secondaryText }]}>Choose an action:</Text>
+        <TouchableOpacity style={styles.button} onPress={() => handleOpen('CameraScreen')}>
+          <Text style={[styles.buttonText, { color: theme.colors.text }]}>Take a photo</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => handleOpen('CalendarScreen')}>
+          <Text style={[styles.buttonText, { color: theme.colors.text }]}>Open calendar</Text>
+        </TouchableOpacity>
+        <View style={styles.footer}>
+          <Text style={[styles.footerText, { color: theme.colors.secondaryText }]}>©Lev Kosyk</Text>
         </View>
+      </View>
     </View>
   );
 };
@@ -87,5 +109,3 @@ const styles = StyleSheet.create({
     color: '#aaa',
   },
 });
-
-export default MainScreen;

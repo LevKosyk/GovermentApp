@@ -1,24 +1,28 @@
-import { useState, useEffect, useContext } from 'react';
-import { Alert, Button, StyleSheet, Text, TextInput, View, StatusBar, FlatList, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { useState, useContext } from 'react';
+import { Alert, StyleSheet, Text, TextInput, View, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AppContext } from '../Provider/AppContextProvider';
-import { FetchRegister } from '../../service/AppService';
-import Navbar from '../AditionalyScreens/Navbar';
-import { ScrollView } from 'react-native-gesture-handler';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { ScrollView } from 'react-native-gesture-handler';
+
+import { AppContext } from '../Provider/AppContextProvider';
+import Loader from '../AditionalComponents/Loader'
+import { FetchRegister } from '../../service/AppService';
 
 
-const RegisterScreen = ({ navigation }) => {
-    const [login, setLogin] = useState('')
-    const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
-    const [secureTextEntry, setSecureTextEntry] = useState(true)
-    const [secureTextEntryConfirm, setSecureTextEntryConfirm] = useState(true)
-    const { theme, changeTheme } = useContext(AppContext);
+export default RegisterScreen = ({ navigation }) => {
+    const [loading, setLoading] = useState(false)
+    const [login, setLogin] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [name, setName] = useState(''); 
+    const [surname, setSurname] = useState(''); 
+    const [secureTextEntry, setSecureTextEntry] = useState(true);
+    const [secureTextEntryConfirm, setSecureTextEntryConfirm] = useState(true);
+    const { theme } = useContext(AppContext);
 
     const handleRegister = async () => {
-        if (!login.trim() || !password.trim() || !confirmPassword.trim()) {
-            Alert.alert('Error', 'Enter login and password');
+        if (!login.trim() || !password.trim() || !confirmPassword.trim() || !name.trim() || !surname.trim()) {
+            Alert.alert('Error', 'Enter all fields');
             return;
         }
 
@@ -27,74 +31,96 @@ const RegisterScreen = ({ navigation }) => {
             return;
         }
 
-        const existingUser = await AsyncStorage.getItem(login);
-        if (existingUser !== null) {
-            Alert.alert('Error', 'This login is unavailable');
-            return;
-        }
+        setLoading(true);
+
+        await FetchRegister(login, password, name, surname); 
         await AsyncStorage.setItem(login, password);
-        await FetchRegister(login, password);
+        setLogin('')
+        setPassword('')
+        setConfirmPassword('')
+        setName('');
+        setSurname('')
         Alert.alert('Success', 'Account created');
-        navigation.goBack();
+        navigation.navigate("HomeScreen");
     };
+
     return (
-        <KeyboardAvoidingView
-            style={{ flex: 1 }}
-        >
+        <KeyboardAvoidingView style={{ flex: 1 }}>
             <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-                <Navbar navigation={navigation} />
-                <ScrollView contentContainerStyle={[styles.container, { backgroundColor: theme.colors.background }]}>
-                    <Text style={[styles.title, { color: theme.colors.secondaryText }]}>Registration</Text>
+                {loading ? (
+                    <Loader />
+                ) : (
+                    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: theme.colors.background }]}>
+                        <Text style={[styles.title, { color: theme.colors.secondaryText }]}>Registration</Text>
 
-                    <Text style={[styles.label, { color: theme.colors.secondaryText }]}>Login</Text>
-                    <TextInput
-                        value={login}
-                        onChangeText={setLogin}
-                        style={[styles.input, { color: theme.colors.textInput, backgroundColor: theme.colors.surface }]}
-                        placeholder="Enter login"
-                        placeholderTextColor={theme.colors.text}
-                    />
+                        <Text style={[styles.label, { color: theme.colors.secondaryText }]}>Name</Text>
+                        <TextInput
+                            value={name}
+                            onChangeText={setName}
+                            style={[styles.input, { color: theme.colors.secondaryText, backgroundColor: theme.colors.surface }]}
+                            placeholder="Enter your name"
+                            placeholderTextColor={theme.colors.secondaryText}
+                        />
 
-                    <Text style={[styles.label, { color: theme.colors.secondaryText }]}>Password</Text>
-                    <TextInput
-                        value={password}
-                        onChangeText={setPassword}
-                        style={[styles.input, { color: theme.colors.textInput, backgroundColor: theme.colors.surface }]}
-                        placeholder="Enter password"
-                        secureTextEntry={secureTextEntry}
-                        placeholderTextColor={theme.colors.text}
-                    />
-                    <TouchableOpacity
-                        onPress={() => setSecureTextEntry(!secureTextEntry)}
-                        style={{ position: 'absolute', right: 23, top: '45%', transform: [{ translateY: -12 }], padding: 8, }}
-                    >
-                        <Ionicons name="eye" size={24} color={theme.colors.secondaryText} />
-                    </TouchableOpacity>
+                        <Text style={[styles.label, { color: theme.colors.secondaryText }]}>Surname</Text>
+                        <TextInput
+                            value={surname}
+                            onChangeText={setSurname}
+                            style={[styles.input, { color: theme.colors.secondaryText, backgroundColor: theme.colors.surface }]}
+                            placeholder="Enter your surname"
+                            placeholderTextColor={theme.colors.secondaryText}
+                        />
 
-                    <Text style={[styles.label, { color: theme.colors.secondaryText }]}>Confirm password</Text>
-                    <TextInput
-                        value={confirmPassword}
-                        onChangeText={setConfirmPassword}
-                        style={[styles.input, { color: theme.colors.textInput, backgroundColor: theme.colors.surface }]}
-                        placeholder="Confirm password"
-                        secureTextEntry={secureTextEntryConfirm}
-                        placeholderTextColor={theme.colors.text}
-                    />
-                    <TouchableOpacity
-                        onPress={() => setSecureTextEntryConfirm(!setSecureTextEntryConfirm)}
-                        style={{ position: 'absolute', right: 23, top: '56.5%', transform: [{ translateY: -12 }], padding: 8, }}
-                    >
-                        <Ionicons name="eye" size={24} color={theme.colors.secondaryText} />
-                    </TouchableOpacity>
+                        <Text style={[styles.label, { color: theme.colors.secondaryText }]}>Login</Text>
+                        <TextInput
+                            value={login}
+                            onChangeText={setLogin}
+                            style={[styles.input, { color: theme.colors.secondaryText, backgroundColor: theme.colors.surface }]}
+                            placeholder="Enter login"
+                            placeholderTextColor={theme.colors.secondaryText}
+                        />
 
-                    <TouchableOpacity onPress={handleRegister} style={[styles.button, styles.registerButton]}>
-                        <Text style={styles.buttonText}>Register</Text>
-                    </TouchableOpacity>
+                        <Text style={[styles.label, { color: theme.colors.secondaryText }]}>Password</Text>
+                        <TextInput
+                            value={password}
+                            onChangeText={setPassword}
+                            style={[styles.input, { color: theme.colors.secondaryText, backgroundColor: theme.colors.surface }]}
+                            placeholder="Enter password"
+                            secureTextEntry={secureTextEntry}
+                            placeholderTextColor={theme.colors.secondaryText}
+                        />
+                        <TouchableOpacity
+                            onPress={() => setSecureTextEntry(!secureTextEntry)}
+                            style={{ position: 'absolute', right: 23, top: '56.5%', transform: [{ translateY: -12 }], padding: 8, }}
+                        >
+                            <Ionicons name="eye" size={24} color={theme.colors.secondaryText} />
+                        </TouchableOpacity>
 
-                    <TouchableOpacity onPress={() => navigation.goBack()} style={[styles.button, styles.loginButton]}>
-                        <Text style={styles.buttonText}>Back to login</Text>
-                    </TouchableOpacity>
-                </ScrollView>
+                        <Text style={[styles.label, { color: theme.colors.secondaryText }]}>Confirm password</Text>
+                        <TextInput
+                            value={confirmPassword}
+                            onChangeText={setConfirmPassword}
+                            style={[styles.input, { color: theme.colors.secondaryText, backgroundColor: theme.colors.surface }]}
+                            placeholder="Confirm password"
+                            secureTextEntry={secureTextEntryConfirm}
+                            placeholderTextColor={theme.colors.text}
+                        />
+                        <TouchableOpacity
+                            onPress={() => setSecureTextEntryConfirm(!secureTextEntryConfirm)}
+                            style={{ position: 'absolute', right: 23, top: '67.5%', transform: [{ translateY: -12 }], padding: 8, }}
+                        >
+                            <Ionicons name="eye" size={24} color={theme.colors.secondaryText} />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={handleRegister} style={[styles.button, styles.registerButton]}>
+                            <Text style={styles.buttonText}>Register</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={() => navigation.goBack()} style={[styles.button, styles.loginButton]}>
+                            <Text style={styles.buttonText}>Back to login</Text>
+                        </TouchableOpacity>
+                    </ScrollView>
+                )}
             </View>
         </KeyboardAvoidingView>
     );
@@ -146,5 +172,3 @@ const styles = StyleSheet.create({
         color: '#fff',
     },
 });
-
-export default RegisterScreen;

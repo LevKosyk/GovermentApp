@@ -1,5 +1,6 @@
-import React, { useContext, useState } from 'react';
-import { TouchableOpacity, StyleSheet, Text, View } from 'react-native';
+import { useContext } from 'react';
+import { TouchableOpacity, StyleSheet, Text } from 'react-native';
+
 import { AppContext } from '../Provider/AppContextProvider';
 
 export default function DayComponentScreen({ day, isTask, navigation, date, textStyle }) {
