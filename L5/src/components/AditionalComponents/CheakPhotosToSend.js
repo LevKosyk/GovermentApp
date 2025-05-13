@@ -39,6 +39,7 @@ export default async function CheakPhotosToSend() {
             }
         } else {
             Alert.alert("No Internet Connection", "Please check your internet connection and try again.");
+            return false
         }
     }
     return true

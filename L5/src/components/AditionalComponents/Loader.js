@@ -5,9 +5,6 @@ export default Loader = ({ state, theme }) => {
     return (
         <View style={styles.loaderContainer}>
             <ActivityIndicator size="large" color="#007bff" />
-            <Text style={[styles.loaderText, { color: theme?.colors?.text || '#000' }]}>
-                Processing...
-            </Text>
         </View>
     );
 };

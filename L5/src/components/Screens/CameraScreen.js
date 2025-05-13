@@ -53,8 +53,10 @@ export default CameraScreen = ({ navigation }) => {
     setLoading(true);
     try {
       console.log("CheakPhotosToSend");
-      await CheakPhotosToSend()
-      await FetchSendPhoto(photo, null, situation, null, null, description);
+      const result = await CheakPhotosToSend()
+      if (result) {
+        await FetchSendPhoto(photo, null, situation, null, null, description);
+      }
     } catch (error) {
       console.error('Error sending photo:', error);
       Alert.alert('Failed to send photo.');
