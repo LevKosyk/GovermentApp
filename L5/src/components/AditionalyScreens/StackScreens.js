@@ -1,61 +1,66 @@
 import { useContext, useEffect, useState } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { View, StyleSheet, useWindowDimensions  } from "react-native";
+import { NavigationContainer, useFocusEffect } from "@react-navigation/native";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { useNavigationContainerRef } from '@react-navigation/native';
 
-import { createTable } from '../../SqlliteDb/database';
+
 import { AppContext } from '../Provider/AppContextProvider';
 import LoginScreen from '../Screens/LoginScreen';
 import RegisterScreen from '../Screens/RegisterScreen';
 import SettingsScreen from "../Screens/SettingsScreen";
 import LogoutScreen from '../AditionalyScreens/LogoutScreen'
-import CheakPhotosToSend from '../AditionalComponents/CheakPhotosToSend'
 import StackScreenComponent from '../AditionalComponents/StackScreenComponent'
-import Loader from "../AditionalComponents/Loader";
+
 
 
 const Drawer = createDrawerNavigator()
 
 export default function StackScreen() {
     const { theme } = useContext(AppContext)
-
     const dimensions = useWindowDimensions();
+    const [isAuthenticated, setIsAuntificated] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const navigationRef = useNavigationContainerRef();
 
-    const [isAuthenticated, setIsAuntificated] = useState(false)
     useEffect(() => {
-        const init = async () => {
+        const checkAuth = async () => {
             const status = await AsyncStorage.getItem('Authorized');
-            if (status) {
-                setIsAuntificated(true)
-            }
-            else{
-                setIsAuntificated(false)
-            }
+            setIsAuntificated(!!status);
         };
+        checkAuth();
 
-        init();
-    }, []);
+        const unsubscribe = navigationRef.addListener('state', checkAuth);
+        return unsubscribe;
+    }, [navigationRef]);
 
+    if (loading) {
+        return (
+            <View style={styles.loaderContainer}>
+                <Loader />
+            </View>
+        );
+    }
 
     return (
-        <NavigationContainer>
+        <NavigationContainer ref={navigationRef}>
             <Drawer.Navigator initialRouteName="HomeScreen" screenOptions={{
-                    drawerActiveTintColor: theme.colors.background,
-                    drawerActiveBackgroundColor: theme.colors.buttonColor,
-                    drawerLabelStyle: {
-                        color: theme.colors.secondaryText,
-                    },
-                    drawerStyle: {
-                        backgroundColor: theme.colors.background,
-                        width: 240,
-                    },
-                    drawerType: dimensions.width >= 768 ? 'permanent' : 'front',
-                    headerTitleStyle: { color: theme.colors.secondaryText },
-                    headerTintColor: theme.colors.secondaryText,
-                    headerStyle: { backgroundColor: theme.colors.background },
-                }} >
-                <Drawer.Screen name="HomeScreen" component={StackScreenComponent}  />
+                drawerActiveTintColor: theme.colors.background,
+                drawerActiveBackgroundColor: theme.colors.buttonColor,
+                drawerLabelStyle: {
+                    color: theme.colors.secondaryText,
+                },
+                drawerStyle: {
+                    backgroundColor: theme.colors.background,
+                    width: 240,
+                },
+                drawerType: dimensions.width >= 768 ? 'permanent' : 'front',
+                headerTitleStyle: { color: theme.colors.secondaryText },
+                headerTintColor: theme.colors.secondaryText,
+                headerStyle: { backgroundColor: theme.colors.background },
+            }} >
+                <Drawer.Screen name="HomeScreen" component={StackScreenComponent} />
                 <Drawer.Screen name="Settings" component={SettingsScreen} />
                 {!isAuthenticated && <Drawer.Screen name="Login" component={LoginScreen} />}
                 {!isAuthenticated && <Drawer.Screen name="Register" component={RegisterScreen} />}

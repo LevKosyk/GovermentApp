@@ -79,104 +79,85 @@ export const FetchRegister = async (Login, Password, Name, SecondName) => {
     }
 };
 
-export const FetchSendPhoto = async (uri, date, situation, longitude, latitude, description) => {
+export const FetchSendPhoto = async (uri,date, situation, longitude, latitude ,description) => {
     try {
         const isConnected = await getInternetConnection();
-        const serverStatus = await getServerStatus();
+        const serverStaus = await getServerStatus();
         const login = await AsyncStorage.getItem("Authorized");
 
         if (!login) {
             Alert.alert("Error", "User not authorized");
             return;
         }
-
-        try {
-            await CheakPhotosToSend();
-        } catch (err) {
-            Alert.alert("Error", "Failed to sync local photos. Please try again.");
-            return;
-        }
-
-        if (!date || !longitude || !latitude) {
-            const location = await getLocation();
-            if (!location) {
-                Alert.alert("Error", "Could not get location");
-                return;
+        if (serverStaus && isConnected) {
+            if (!date || !longitude || !latitude) {
+                const location = await getLocation();
+                date = new Date().toISOString()
+                longitude = location.longitude
+                latitude = location.latitude
             }
-            date = new Date().toISOString();
-            longitude = location.longitude;
-            latitude = location.latitude;
-        }
-
-        if (serverStatus && isConnected) {
             let url = null;
-            try {
-                const formDataCloud = new FormData();
-                formDataCloud.append('file', { uri: uri, name: `photo${login}.jpg`, type: 'image/jpg' });
-                formDataCloud.append('upload_preset', 'Testing');
-                formDataCloud.append('cloud_name', 'dzs2ayj8k');
+            const formDataCloud = new FormData();
+            formDataCloud.append('file', { uri: uri, name: `photo${login}.jpg`, type: 'image/jpg' });
+            formDataCloud.append('upload_preset', 'Testing');
+            formDataCloud.append('cloud_name', 'dzs2ayj8k');
 
-                const response = await fetch(API_URL_CLOUDINARY, {
-                    method: 'POST',
-                    body: formDataCloud,
+            try {
+                const response = await fetch('https://api.cloudinary.com/v1_1/dzs2ayj8k/image/upload', {
+                    method: 'post',
+                    body: formDataCloud
                 });
                 const data = await response.json();
-                if (data && data.secure_url) {
+                if (data.secure_url) {
                     url = data.secure_url;
-                    console.log("Image URL:", url);
-                } else {
-                    Alert.alert("Error", "Image upload failed");
-                    return;
+                    console.log(data.secure_url);
                 }
             } catch (error) {
-                console.log("Error uploading to Cloudinary:", error);
-                Alert.alert("Error", "Image upload failed");
-                return;
+                console.log(error);
             }
-
             if (!url) {
                 Alert.alert("Error", "No URL generated from image upload");
                 return;
             }
-
             const payload = {
                 Url: url,
                 Date: date,
                 Login: login,
-                Longitude: longitude ? longitude.toString() : '',
-                Latitude: latitude ? latitude.toString() : '',
-                Description: description || '',
-                Situation: situation ? situation.toString() : ''
+                Longitude: longitude.toString(),
+                Latitude: latitude.toString(),
+                Description: description,
+                Situation: situation.toString() || ''
             };
 
-            try {
-                const response = await axios.post(`${API_URL}/photo/sendPhoto`, payload, {
-                    headers: { "Content-Type": "application/json" },
-                    timeout: 15000,
-                });
+            const response = await axios.post(`${API_URL}/photo/sendPhoto`, payload, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                timeout: 15000,
+            });
 
-                if (response.status === 200) {
-                    console.log("Photo sent successfully!");
-                    Alert.alert('Photo sent successfully!');
-                } else {
-                    Alert.alert("Error", "Failed to send photo", [{ text: "OK" }]);
-                }
-            } catch (error) {
-                console.error("Error sending photo to server:", error.response ? error.response.data : error);
-                Alert.alert("Error", "Failed to send photo to server", [{ text: "OK" }]);
+            if (response.status === 200) {
+                console.log("FetchSendPhoto => Code:", response.status);
+                Alert.alert('Photo sent successfully!');
+            } else {
+                Alert.alert("Error", "Failed to send photo", [{ text: "OK" }]);
             }
         } else {
             const location = await getLocation();
-            if (!location) {
-                Alert.alert("Error", "Could not get location to save photo locally");
-                return;
-            }
             await insertPhoto(uri, new Date().toISOString(), location, situation, description);
             Alert.alert("No Internet", "Photo will be sent later", [{ text: "OK" }]);
         }
     } catch (error) {
-        console.error("Error in FetchSendPhoto:", error.response ? error.response.data : error);
-        Alert.alert("Error", "Something went wrong", [{ text: "OK" }]);
+        if (error.response) {
+            console.error("Error in FetchSendPhoto:", error.response.data);
+            Alert.alert("Error", `Server Error: ${error.response.data}`, [{ text: "OK" }]);
+        } else if (error.request) {
+            console.error("Error in FetchSendPhoto (No response):", error.request);
+            Alert.alert("Error", "No response from server", [{ text: "OK" }]);
+        } else {
+            console.error("Error in FetchSendPhoto (Request setup):", error.message);
+            Alert.alert("Error", "Request setup failed", [{ text: "OK" }]);
+        }
     }
 };
 

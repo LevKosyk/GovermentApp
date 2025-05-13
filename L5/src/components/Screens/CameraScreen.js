@@ -8,6 +8,7 @@ import { AppContext } from '../Provider/AppContextProvider';
 import { ViolationTypes } from '../../enums/enums';
 import DropDownList from '../AditionalComponents/DropDownList'
 import Loader from '../AditionalComponents/Loader'
+import CheakPhotosToSend from '../AditionalComponents/CheakPhotosToSend';
 
 export default CameraScreen = ({ navigation }) => {
   const { theme } = useContext(AppContext);
@@ -51,6 +52,8 @@ export default CameraScreen = ({ navigation }) => {
   const sendPhoto = async () => {
     setLoading(true);
     try {
+      console.log("CheakPhotosToSend");
+      await CheakPhotosToSend()
       await FetchSendPhoto(photo, null, situation, null, null, description);
     } catch (error) {
       console.error('Error sending photo:', error);

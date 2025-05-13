@@ -2,24 +2,16 @@ import { useContext, useEffect, useState } from 'react';
 import { TouchableOpacity, View, Text, StyleSheet, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 import { AppContext } from '../Provider/AppContextProvider';
 
 export default MainScreen = ({ navigation }) => {
   const { theme } = useContext(AppContext);
 
-  const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     const init = async () => {
       await createTable();
-      setLoading(true);
-      const status = await AsyncStorage.getItem('Authorized');
-      if (status) {
-        await CheakPhotosToSend()
-      }
-      setLoading(false);
     };
-
     init();
   }, []);
 
@@ -30,14 +22,6 @@ export default MainScreen = ({ navigation }) => {
     else {
       Alert.alert('You are not authorized!');
     }
-  }
-
-  if (loading) {
-    return (
-      <View style={styles.loaderContainer}>
-        <Loader />
-      </View>
-    );
   }
 
   return (
