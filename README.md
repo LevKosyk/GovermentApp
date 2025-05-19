@@ -1,268 +1,155 @@
-<div align="left" style="position: relative;">
-<h1>GOVERMENT APP</h1>
-<p align="left">
-</p>
-<p align="left">
-	<img src="https://img.shields.io/github/license/LevKosyk/GovermentApp?style=default&logo=opensourceinitiative&logoColor=white&color=a0d1e2" alt="license">
-	<img src="https://img.shields.io/github/last-commit/LevKosyk/GovermentApp?style=default&logo=git&logoColor=white&color=a0d1e2" alt="last-commit">
-	<img src="https://img.shields.io/github/languages/top/LevKosyk/GovermentApp?style=default&color=a0d1e2" alt="repo-top-language">
-	<img src="https://img.shields.io/github/languages/count/LevKosyk/GovermentApp?style=default&color=a0d1e2" alt="repo-language-count">
-</p>
-<p align="left"><!-- default option, no dependency badges. -->
-</p>
-<p align="left">
-	<!-- default option, no dependency badges. -->
-</p>
-</div>
-<br clear="right">
+🇺🇦 Government App Client
+<div align="left"> <h2>GOVERNMENT APP CLIENT</h2> <p> <img src="https://img.shields.io/github/last-commit/LevKosyk/ApiForGovermentApp?style=default&logo=git&logoColor=white&color=a0d1e2" alt="last-commit"> </p> </div>
+🌐 Language Switch | Зміна мови
+🇺🇸 English
 
-## 🔗 Table of Contents
+🇺🇦 Українська
 
-1. [📍 Overview](#-overview)
-2. [📁 Project Structure](#-project-structure)
-   2.1. [📂 Project Index](#-project-index)
-3. [🚀 Getting Started](#-getting-started)
-  3.1. [☑️ Prerequisites](#-prerequisites)
-  3.2. [⚙️ Installation](#-installation)
-  3.3. [🤖 Usage](#🤖-usage)
----
+📍 Overview
+React Native client for a government reporting app inspired by the movie "Law Abiding Citizen". Users can log offenses (with photos, geolocation, and time), while guests can browse offenses in a calendar view.
 
-## 📍 Overview
+📁 Project Structure
+bash
+Копировать
+Редактировать
+GovermentApp/
+├── assets/             # Static assets like icons and images
+├── components/         # Reusable UI components
+├── constants/          # App-wide constants (colors, sizes)
+├── hooks/              # Custom React hooks
+├── navigation/         # Navigation configuration
+├── screens/            # Screen-level components
+├── services/           # API and utility service layers
+├── types/              # TypeScript types/interfaces
+├── utils/              # Helper functions
+├── App.tsx             # Main entry point
+├── app.json            # Expo configuration
+├── package.json
+├── tsconfig.json
+└── README.md
+🚀 Getting Started
+☑️ Prerequisites
+Language: TypeScript / JavaScript
 
-<code>❯It is an app for goverment on React Native that as made by film "Law abiding citizen" to be a rat ;)</code>
+Runtime: Node.js + Expo CLI
 
-## 📁 Project Structure
+IDE: Visual Studio Code
 
-```sh
-└── GovermentApp/
-    └── L5
-        ├── App.js
-        ├── app.json
-        ├── assets
-        ├── index.js
-        ├── package-lock.json
-        ├── package.json
-        └── src
-```
+⚙️ Local Installation
+bash
+Копировать
+Редактировать
+# 1. Clone the repository
+git clone https://github.com/LevKosyk/GovermentApp
+cd GovermentApp
 
+# 2. Install dependencies
+npm install
 
-### 📂 Project Index
-<details open>
-	<summary><b><code>GOVERMENTAPP/</code></b></summary>
-	<details> <!-- __root__ Submodule -->
-		<summary><b>__root__</b></summary>
-		<blockquote>
-			<table>
-			</table>
-		</blockquote>
-	</details>
-	<details> <!-- L5 Submodule -->
-		<summary><b>L5</b></summary>
-		<blockquote>
-			<table>
-			<tr>
-				<td><b><a href='https://github.com/LevKosyk/GovermentApp/blob/master/L5/package-lock.json'>package-lock.json</a></b></td>
-				<td><code>❯ REPLACE-ME</code></td>
-			</tr>
-			<tr>
-				<td><b><a href='https://github.com/LevKosyk/GovermentApp/blob/master/L5/app.json'>app.json</a></b></td>
-				<td><code>❯ REPLACE-ME</code></td>
-			</tr>
-			<tr>
-				<td><b><a href='https://github.com/LevKosyk/GovermentApp/blob/master/L5/App.js'>App.js</a></b></td>
-				<td><code>❯ REPLACE-ME</code></td>
-			</tr>
-			<tr>
-				<td><b><a href='https://github.com/LevKosyk/GovermentApp/blob/master/L5/index.js'>index.js</a></b></td>
-				<td><code>❯ REPLACE-ME</code></td>
-			</tr>
-			<tr>
-				<td><b><a href='https://github.com/LevKosyk/GovermentApp/blob/master/L5/package.json'>package.json</a></b></td>
-				<td><code>❯ REPLACE-ME</code></td>
-			</tr>
-			</table>
-			<details>
-				<summary><b>src</b></summary>
-				<blockquote>
-					<details>
-						<summary><b>components</b></summary>
-						<blockquote>
-							<details>
-								<summary><b>Provider</b></summary>
-								<blockquote>
-									<table>
-									<tr>
-										<td><b><a href='https://github.com/LevKosyk/GovermentApp/blob/master/L5/src/components/Provider/AppContextProvider.js'>AppContextProvider.js</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									</table>
-								</blockquote>
-							</details>
-							<details>
-								<summary><b>Theme</b></summary>
-								<blockquote>
-									<table>
-									<tr>
-										<td><b><a href='https://github.com/LevKosyk/GovermentApp/blob/master/L5/src/components/Theme/Themes.js'>Themes.js</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									</table>
-								</blockquote>
-							</details>
-							<details>
-								<summary><b>AditionalComponents</b></summary>
-								<blockquote>
-									<table>
-									<tr>
-										<td><b><a href='https://github.com/LevKosyk/GovermentApp/blob/master/L5/src/components/AditionalComponents/DropDownList.js'>DropDownList.js</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									<tr>
-										<td><b><a href='https://github.com/LevKosyk/GovermentApp/blob/master/L5/src/components/AditionalComponents/Loader.js'>Loader.js</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									</table>
-								</blockquote>
-							</details>
-							<details>
-								<summary><b>Screens</b></summary>
-								<blockquote>
-									<table>
-									<tr>
-										<td><b><a href='https://github.com/LevKosyk/GovermentApp/blob/master/L5/src/components/Screens/MainScreen.js'>MainScreen.js</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									<tr>
-										<td><b><a href='https://github.com/LevKosyk/GovermentApp/blob/master/L5/src/components/Screens/CameraScreen.js'>CameraScreen.js</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									<tr>
-										<td><b><a href='https://github.com/LevKosyk/GovermentApp/blob/master/L5/src/components/Screens/RegisterScreen.js'>RegisterScreen.js</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									<tr>
-										<td><b><a href='https://github.com/LevKosyk/GovermentApp/blob/master/L5/src/components/Screens/DayDetailsScreen.js'>DayDetailsScreen.js</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									<tr>
-										<td><b><a href='https://github.com/LevKosyk/GovermentApp/blob/master/L5/src/components/Screens/CalendarScreen.js'>CalendarScreen.js</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									<tr>
-										<td><b><a href='https://github.com/LevKosyk/GovermentApp/blob/master/L5/src/components/Screens/LoginScreen.js'>LoginScreen.js</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									<tr>
-										<td><b><a href='https://github.com/LevKosyk/GovermentApp/blob/master/L5/src/components/Screens/SettingsScreen.js'>SettingsScreen.js</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									<tr>
-										<td><b><a href='https://github.com/LevKosyk/GovermentApp/blob/master/L5/src/components/Screens/DayComponentsScreen.js'>DayComponentsScreen.js</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									</table>
-								</blockquote>
-							</details>
-							<details>
-								<summary><b>AditionalyScreens</b></summary>
-								<blockquote>
-									<table>
-									<tr>
-										<td><b><a href='https://github.com/LevKosyk/GovermentApp/blob/master/L5/src/components/AditionalyScreens/Header.js'>Header.js</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									<tr>
-										<td><b><a href='https://github.com/LevKosyk/GovermentApp/blob/master/L5/src/components/AditionalyScreens/Navbar.js'>Navbar.js</a></b></td>
-										<td><code>❯ REPLACE-ME</code></td>
-									</tr>
-									</table>
-								</blockquote>
-							</details>
-						</blockquote>
-					</details>
-					<details>
-						<summary><b>SqlliteDb</b></summary>
-						<blockquote>
-							<table>
-							<tr>
-								<td><b><a href='https://github.com/LevKosyk/GovermentApp/blob/master/L5/src/SqlliteDb/database.js'>database.js</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							</table>
-						</blockquote>
-					</details>
-					<details>
-						<summary><b>service</b></summary>
-						<blockquote>
-							<table>
-							<tr>
-								<td><b><a href='https://github.com/LevKosyk/GovermentApp/blob/master/L5/src/service/AppService.js'>AppService.js</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							</table>
-						</blockquote>
-					</details>
-					<details>
-						<summary><b>enums</b></summary>
-						<blockquote>
-							<table>
-							<tr>
-								<td><b><a href='https://github.com/LevKosyk/GovermentApp/blob/master/L5/src/enums/enums.js'>enums.js</a></b></td>
-								<td><code>❯ REPLACE-ME</code></td>
-							</tr>
-							</table>
-						</blockquote>
-					</details>
-				</blockquote>
-			</details>
-		</blockquote>
-	</details>
-</details>
+# 3. Update environment variables
+# Edit AppService.js and replace the following:
 
----
-## 🚀 Getting Started
+REPLACE-ME-IP                           # your IP from `ipconfig` (IPv4)
+ADD_YOUR_CLOUDINARY_URL_HERE           # Cloudinary upload URL
+ADD_YOUR_CLOUDINARY_UPLOAD_PRESET_HERE # Cloudinary preset
+ADD_YOUR_CLOUDINARY_CLOUD_NAME_HERE    # Cloudinary cloud name
 
-### ☑️ Prerequisites
+# 4. Start the app
+npx expo start
+🐳 Docker Setup (For API + DB)
+⚠️ This React Native client doesn't run in Docker, but the backend API does. Here's how to set that up if needed:
 
-Before getting started with GovermentApp, ensure your runtime environment meets the following requirements:
+⚙️ Prerequisites
+Docker Desktop
 
-- **Programming Language:** JavaScript
-- **Package Manager:** Npm
+📄 Docker Instructions
+bash
+Копировать
+Редактировать
+# Clone the backend repository
+git clone https://github.com/LevKosyk/ApiForGovermentApp
+cd ApiForGovermentApp
 
+# Run backend and MSSQL DB via Docker
+docker-compose up --build
+This will start the .NET Web API (web) and SQL Server (db) containers as defined in docker-compose.yml.
 
-### ⚙️ Installation
+Default connection string:
 
-Install GovermentApp using one of the following methods:
+json
+Копировать
+Редактировать
+"ConnectionStrings": {
+  "DefaultConnection": "Server=db;Database=GovernmentAppDb;User=sa;Password=Your_password123;"
+}
+You can customize these credentials in docker-compose.yml and appsettings.json.
 
-**Build from source:**
+📺 Tutorial video: Docker + SQL Server
 
-1. Clone the GovermentApp repository:
-```sh
-❯ git clone https://github.com/LevKosyk/GovermentApp
-```
+🇺🇦 Огляд для користувачів
+React Native застосунок для повідомлення про правопорушення. Зареєстровані користувачі можуть додавати інциденти (з фото, геолокацією та часом), а гість — переглядати їх у календарі.
 
-2. Navigate to the project directory:
-```sh
-❯ cd GovermentApp
-```
+☑️ Передумови
+Мова: TypeScript / JavaScript
 
-3. Install the project dependencies:
+Середовище: Node.js + Expo
 
+IDE: Visual Studio Code
 
-**Using `npm`** &nbsp; [<img align="center" src="https://img.shields.io/badge/npm-CB3837.svg?style={badge_style}&logo=npm&logoColor=white" />](https://www.npmjs.com/)
+Аккаунт: Cloudinary (для зберігання фото)
 
-```sh
-❯ npm install
-```
+⚙️ Встановлення локально
+bash
+Копировать
+Редактировать
+# 1. Клонуйте репозиторій
+git clone https://github.com/LevKosyk/GovermentApp
+cd GovermentApp
 
+# 2. Встановіть залежності
+npm install
 
+# 3. Налаштуйте змінні середовища:
+# Відкрийте файл AppService.js і замініть:
 
+REPLACE-ME-IP                           # Ваша IP-адреса з `ipconfig` → IPv4
+ADD_YOUR_CLOUDINARY_URL_HERE           # URL для завантаження в Cloudinary
+ADD_YOUR_CLOUDINARY_UPLOAD_PRESET_HERE # Ваш upload preset
+ADD_YOUR_CLOUDINARY_CLOUD_NAME_HERE    # Ім’я вашої хмари у Cloudinary
 
-### 🤖 Usage
-Run GovermentApp using the following command:
-**Using `npm`** &nbsp; [<img align="center" src="https://img.shields.io/badge/npm-CB3837.svg?style={badge_style}&logo=npm&logoColor=white" />](https://www.npmjs.com/)
+# 4. Запустіть застосунок
+npx expo start
+🐳 Налаштування Docker (тільки для бекенду)
+⚠️ Цей застосунок не запускається в Docker. Docker використовується тільки для запуску API та бази даних.
 
-```sh
-❯ npm start
-```
+bash
+Копировать
+Редактировать
+# Клонуйте бекенд репозиторій
+git clone https://github.com/LevKosyk/ApiForGovermentApp
+cd ApiForGovermentApp
 
+# Запуск API і бази даних
+docker-compose up --build
+📂 У docker-compose.yml вказані два сервіси:
+
+web: .NET API
+
+db: MSSQL Server
+
+🔐 Рядок підключення за замовчуванням:
+
+json
+Копировать
+Редактировать
+"ConnectionStrings": {
+  "DefaultConnection": "Server=db;Database=GovernmentAppDb;User=sa;Password=Your_password123;"
+}
+Змінити параметри можна у docker-compose.yml та appsettings.json.
+
+📺 Відеоінструкція: Docker + MSSQL
+
+📞 Contact
+If you have any questions, feel free to open an issue or contact LevKosyk via GitHub.
+
+Made with ❤️ by a law-abiding citizen 😉
