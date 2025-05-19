@@ -1,9 +1,13 @@
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { useContext } from 'react';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
 
-export default Loader = ({ state, theme }) => {
+import {AppContext} from '../Provider/AppContextProvider'
+
+export default Loader = ({ state }) => {
+    const {theme} = useContext(AppContext)
     if (!state) return null; 
     return (
-        <View style={styles.loaderContainer}>
+        <View style={[styles.loaderContainer, {backgroundColor: theme.colors.background}]}>
             <ActivityIndicator size="large" color="#007bff" />
         </View>
     );
@@ -17,10 +21,5 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)', 
         width: '100%',
         height: '100%'
-    },
-    loaderText: {
-        marginTop: 10,
-        fontSize: 16,
-        fontWeight: '500',
     },
 });

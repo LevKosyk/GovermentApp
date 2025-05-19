@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
-import { NavigationContainer, useFocusEffect } from "@react-navigation/native";
-import { StyleSheet, useWindowDimensions, View } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import {  StyleSheet, useWindowDimensions, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useNavigationContainerRef } from '@react-navigation/native';
@@ -21,7 +21,6 @@ export default function StackScreen() {
     const { theme } = useContext(AppContext)
     const dimensions = useWindowDimensions();
     const [isAuthenticated, setIsAuntificated] = useState(false);
-    const [loading, setLoading] = useState(false);
     const navigationRef = useNavigationContainerRef();
 
     useEffect(() => {
@@ -35,13 +34,6 @@ export default function StackScreen() {
         return unsubscribe;
     }, [navigationRef]);
 
-    if (loading) {
-        return (
-            <View style={styles.loaderContainer}>
-                <Loader />
-            </View>
-        );
-    }
 
     return (
         <NavigationContainer ref={navigationRef}>
@@ -69,14 +61,4 @@ export default function StackScreen() {
         </NavigationContainer>
     );
 }
-
-const styles = StyleSheet.create({
-    loaderContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#fff'
-    }
-});
-
 

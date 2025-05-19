@@ -9,8 +9,10 @@ import CheakPhotosToSend from "../components/AditionalComponents/CheakPhotosToSe
 
 
 
-const API_URL = 'http://192.168.0.104:5138/api';
-const API_URL_CLOUDINARY = 'https://api.cloudinary.com/v1_1/dzs2ayj8k/image/upload';
+const API_URL = 'http://REPLACE-ME:5138/api';
+const API_URL_CLOUDINARY = 'ADD_YOUR_CLOUDINARY_URL_HERE';
+const API_URL_CLOUDINARY_UPLOAD_PRESET = 'ADD_YOUR_CLOUDINARY_UPLOAD_PRESET_HERE';
+const API_URL_CLOUDINARY_CLOUD_NAME = 'ADD_YOUR_CLOUDINARY_CLOUD_NAME_HERE';
 
 export const getInternetConnection = async () => {
     const state = await NetInfo.fetch();
@@ -19,7 +21,7 @@ export const getInternetConnection = async () => {
 
 export const getServerStatus = async () => {
     try {
-        const result = await axios.get(`http://192.168.0.104:5138/health`);
+        const result = await axios.get(`http://REPLACE-ME:5138/health`);
         return result.status === 200; 
     } catch (error) {
         console.error("Error fetching server status:", error);
@@ -99,11 +101,11 @@ export const FetchSendPhoto = async (uri,date, situation, longitude, latitude ,d
             let url = null;
             const formDataCloud = new FormData();
             formDataCloud.append('file', { uri: uri, name: `photo${login}.jpg`, type: 'image/jpg' });
-            formDataCloud.append('upload_preset', 'Testing');
-            formDataCloud.append('cloud_name', 'dzs2ayj8k');
+            formDataCloud.append('upload_preset', API_URL_CLOUDINARY_UPLOAD_PRESET);
+            formDataCloud.append('cloud_name', API_URL_CLOUDINARY_CLOUD_NAME);
 
             try {
-                const response = await fetch('https://api.cloudinary.com/v1_1/dzs2ayj8k/image/upload', {
+                const response = await fetch(API_URL_CLOUDINARY, {
                     method: 'post',
                     body: formDataCloud
                 });

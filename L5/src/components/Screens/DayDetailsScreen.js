@@ -94,7 +94,7 @@ export default function DayDetailsScreen({ route, navigation }) {
 
     const loadData = (data) => {
         return (
-            <View style={styles.listContainer}>
+            <View style={[styles.listContainer]}>
                 <FlatList
                     data={data}
                     keyExtractor={(item) => item.id.toString()}
@@ -128,14 +128,14 @@ export default function DayDetailsScreen({ route, navigation }) {
 
     const renderSection = (data, title, iconName, iconColor) => (
         <>
-            <View style={[styles.sectionHeader, { backgroundColor: theme.colors.surface }]}>
+            <View style={[styles.sectionHeader, { backgroundColor: theme.colors.surface, }]}>
                 <Ionicons name={iconName} size={22} color={iconColor} style={{ marginRight: 8 }} />
                 <Text style={[styles.sectionHeaderText, { color: theme.colors.secondaryText }]}>{title}</Text>
             </View>
             {data && data.length > 0 ? (
                 loadData(data)
             ) : (
-                <Text style={[styles.emptyMessage, { color: theme.colors.secondaryText }]}>Nothing for this section</Text>
+                <Text style={[styles.emptyMessage, { color: theme.colors.secondaryText, marginBottom: todos.length === 0? 50 : 0}]}>Nothing for this section</Text>
             )}
         </>
     );
@@ -156,7 +156,7 @@ export default function DayDetailsScreen({ route, navigation }) {
                 <Loader state={loading} theme={theme} />
 
                 {!loading && (
-                    todos.length === 0 ? (
+                    todos.length === 0 && crimes.length === 0 ? (
                         <Text style={[styles.emptyMessage, { color: theme.colors.secondaryText }]}>Nothing for this day</Text>
                     ) : (
                         <View style={styles.contentContainer}>
