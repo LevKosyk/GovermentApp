@@ -5,7 +5,7 @@
 * [🇺🇸 English](#-overview)
 * [🇺🇦 Українська](#-Огляд-для-користувачів)
 
-#📍 Overview
+##📍 Overview
 React Native client for a government reporting app inspired by the movie "Law Abiding Citizen". Users can log offenses (with photos, geolocation, and time), while guests can browse offenses in a calendar view.
 
 ## 📁 Project Structure
