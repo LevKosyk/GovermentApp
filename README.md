@@ -1,6 +1,6 @@
 # 🇺🇦 Government App Client
 <div align="left"> <h2>GOVERNMENT APP CLIENT</h2> <p> <img src="https://img.shields.io/github/last-commit/LevKosyk/ApiForGovermentApp?style=default&logo=git&logoColor=white&color=a0d1e2" alt="last-commit"> </p> </div>
-## 🌐 Language Switch | Зміна мови
+🌐 Language Switch | Зміна мови
 
 * [🇺🇸 English](#-overview)
 * [🇺🇦 Українська](#-Огляд-для-користувачів)
