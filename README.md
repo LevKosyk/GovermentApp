@@ -1,11 +1,11 @@
 # 🇺🇦 Government App Client
 <div align="left"> <h2>GOVERNMENT APP CLIENT</h2> <p> <img src="https://img.shields.io/github/last-commit/LevKosyk/ApiForGovermentApp?style=default&logo=git&logoColor=white&color=a0d1e2" alt="last-commit"> </p> </div>
-## 🌐 Language Switch | Зміна мови
+##  🌐 Language Switch | Зміна мови
 
 * [🇺🇸 English](#-overview)
 * [🇺🇦 Українська](#-Огляд-для-користувачів)
 
-##📍 Overview
+## 📍 Overview
 React Native client for a government reporting app inspired by the movie "Law Abiding Citizen". Users can log offenses (with photos, geolocation, and time), while guests can browse offenses in a calendar view.
 
 ## 📁 Project Structure
